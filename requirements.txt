@@ -3,3 +3,7 @@ matplotlib
 openai
 openai==0.28
 transformers
+tensorflow
+torch 
+torchvision 
+torchaudio
