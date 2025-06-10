@@ -1,3 +1,4 @@
 plotly
 matplotlib
 openai
+openai==0.28
