@@ -13,7 +13,7 @@ def load_model():
 model = load_model()
 
 # Streamlit App
-st.title("Free AI-Powered Dashboard")
+st.title("Free AI-Powered Dashboard v.2.0")
 
 # Step 1: File Upload
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
