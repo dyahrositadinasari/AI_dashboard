@@ -10,6 +10,16 @@ def load_model():
 
 model = load_model()
 
+# Function to preprocess chart data into a readable summary
+def preprocess_chart_data(chart_data):
+ """
+ Convert chart data into a human-readable summary for AI input.
+ """
+ summary = []
+ for _, row in chart_data.iterrows():
+     summary.append(f"{row[0]}: {row[1]}")
+ return " | ".join(summary)
+ 
 # Function to get AI-generated insights
 def get_insights_from_ai(chart_data):
  """
