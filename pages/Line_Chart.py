@@ -90,7 +90,7 @@ if uploaded_file is not None:
      if group_by_date == "Date":
          df["Date"] = df[x_column].dt.date
          x_column = "Date"
-     if group_by_date == "Month":
+     elif group_by_date == "Month":
          df["Month"] = df[x_column].dt.month_name()
          x_column = "Month"
      elif group_by_date == "Year":
