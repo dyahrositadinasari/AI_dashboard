@@ -10,29 +10,33 @@ def load_model():
 
 model = load_model()
 
-# Function to preprocess chart data into a readable summary
+# Function to preprocess chart data into key statistics
 def preprocess_chart_data(chart_data):
  """
- Convert chart data into a human-readable summary for AI input.
+ Extract key statistics from the chart data to provide meaningful insights.
  """
- summary = []
- for _, row in chart_data.iterrows():
-     summary.append(f"{row[0]}: {row[1]}")
- return " | ".join(summary)
+ summary = {}
+ summary["highest_category"] = chart_data.iloc[chart_data.iloc[:, 1].idxmax(), 0]
+ summary["highest_value"] = chart_data.iloc[:, 1].max()
+ summary["lowest_category"] = chart_data.iloc[chart_data.iloc[:, 1].idxmin(), 0]
+ summary["lowest_value"] = chart_data.iloc[:, 1].min()
+ summary["total_sum"] = chart_data.iloc[:, 1].sum()
+ summary["average_value"] = chart_data.iloc[:, 1].mean()
+ return summary
 
 # Function to get AI-generated insights
-def get_insights_from_ai(chart_data):
+def get_insights_from_ai(preprocessed_summary):
  """
  Generate insights using Hugging Face Transformers.
  """
  try:
-     # Preprocess the chart data into a summary
-     preprocessed_data = preprocess_chart_data(chart_data)
-
      # Prepare the input text for the model
      prompt = f"""
-     Analyze the following bar chart data and provide key insights:
-     {preprocessed_data}
+     Analyze the following bar chart summary and provide key insights:
+     - Highest category: {preprocessed_summary['highest_category']} ({preprocessed_summary['highest_value']})
+     - Lowest category: {preprocessed_summary['lowest_category']} ({preprocessed_summary['lowest_value']})
+     - Total sum: {preprocessed_summary['total_sum']}
+     - Average value: {preprocessed_summary['average_value']}
      """
 
      # Generate insights using the Hugging Face model
@@ -77,9 +81,12 @@ if uploaded_file is not None:
      fig = px.bar(chart_data, x=x_column, y=y_column, title=f"Bar Chart of {y_column} by {x_column}")
      st.plotly_chart(fig)
 
+     # Preprocess chart data to extract key statistics
+     preprocessed_summary = preprocess_chart_data(chart_data)
+
      # Generate AI Insights
      st.write("### AI-Generated Insights")
-     insights = get_insights_from_ai(chart_data)
+     insights = get_insights_from_ai(preprocessed_summary)
      st.write(insights)
 else:
  st.info("Please upload a CSV file to get started.")
