@@ -80,13 +80,16 @@ if uploaded_file is not None:
  if pd.api.types.is_datetime64_any_dtype(df[x_column]):
      group_by_date = st.selectbox(
          "Group dates by:",
-         ["None", "Month", "Year", "Year-Month"]
+         ["None", "Date", "Month", "Year", "Year-Month"]
      )
  else:
      group_by_date = "None"
 
  if st.button("Generate Line Chart"):
      # Apply date grouping if applicable
+     if group_by_date == "Date":
+         df["Date"] = df[x_column].dt.date
+         x_column = "Date"
      if group_by_date == "Month":
          df["Month"] = df[x_column].dt.month_name()
          x_column = "Month"
