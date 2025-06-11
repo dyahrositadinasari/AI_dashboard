@@ -58,6 +58,14 @@ st.title("Line Chart Visualization")
 uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
 if uploaded_file is not None:
  df = pd.read_csv(uploaded_file)
+
+ # Ensure that any date columns are parsed correctly
+ for col in df.columns:
+     try:
+         df[col] = pd.to_datetime(df[col])
+     except Exception:
+         pass
+
  st.write("### Dataset Preview")
  st.dataframe(df.head())
 
@@ -68,7 +76,27 @@ if uploaded_file is not None:
      ["sum", "count", "distinct-count", "average", "max", "min"]
  )
 
+ # Check if the selected X-axis column is a date column
+ if pd.api.types.is_datetime64_any_dtype(df[x_column]):
+     group_by_date = st.selectbox(
+         "Group dates by:",
+         ["None", "Month", "Year", "Year-Month"]
+     )
+ else:
+     group_by_date = "None"
+
  if st.button("Generate Line Chart"):
+     # Apply date grouping if applicable
+     if group_by_date == "Month":
+         df["Month"] = df[x_column].dt.month
+         x_column = "Month"
+     elif group_by_date == "Year":
+         df["Year"] = df[x_column].dt.year
+         x_column = "Year"
+     elif group_by_date == "Year-Month":
+         df["Year-Month"] = df[x_column].dt.to_period("M").astype(str)
+         x_column = "Year-Month"
+
      # Apply aggregation
      if aggregation == "sum":
          chart_data = df.groupby(x_column)[y_column].sum().reset_index()
