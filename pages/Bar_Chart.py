@@ -3,10 +3,10 @@ import pandas as pd
 import plotly.express as px
 from transformers import pipeline
 
-# Load Hugging Face model pipeline
+# Load Hugging Face summarization model
 @st.cache_resource  # Cache the model to avoid reloading it every time
 def load_model():
- return pipeline("text-generation", model="distilgpt2")  # Using DistilGPT-2 for efficiency
+ return pipeline("summarization", model="facebook/bart-large-cnn")  # Using BART for summarization
 
 model = load_model()
 
@@ -19,7 +19,7 @@ def preprocess_chart_data(chart_data):
  for _, row in chart_data.iterrows():
      summary.append(f"{row[0]}: {row[1]}")
  return " | ".join(summary)
- 
+
 # Function to get AI-generated insights
 def get_insights_from_ai(chart_data):
  """
