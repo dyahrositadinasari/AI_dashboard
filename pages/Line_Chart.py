@@ -29,8 +29,8 @@ def get_insights_from_ai(preprocessed_summary):
  Generate insights using Hugging Face Transformers.
  """
  try:
-  # Prepare the input text for the model
-  prompt = f"""
+     # Prepare the input text for the model
+     prompt = f"""
      Analyze the following line chart summary and provide key insights:
      - The highest value is {preprocessed_summary['highest_y']} at {preprocessed_summary['highest_x']}.
      - The lowest value is {preprocessed_summary['lowest_y']} at {preprocessed_summary['lowest_x']}.
@@ -38,11 +38,11 @@ def get_insights_from_ai(preprocessed_summary):
      Focus on trends, outliers, and comparisons between categories.
      """
 
-  # Generate insights using the Hugging Face model
-  response = model(prompt, max_length=100, num_return_sequences=1)
-  return response[0]["generated_text"]
+     # Generate insights using the Hugging Face model
+     response = model(prompt, max_length=100, num_return_sequences=1)
+     return response[0]["generated_text"]
  except Exception as e:
-  return f"Error generating insights: {e}"
+     return f"Error generating insights: {e}"
 
 # Fallback function to generate insights programmatically
 def generate_programmatic_insights(preprocessed_summary):
@@ -128,6 +128,12 @@ if uploaded_file is not None:
      # Generate AI Insights
      st.write("### AI-Generated Insights")
      insights = get_insights_from_ai(preprocessed_summary)
+
+     # Fallback to programmatic insights if AI fails
+     if "Error" in insights or len(insights.strip()) == 0:
+         st.warning("AI failed to generate insights. Showing programmatic insights instead.")
+         insights = generate_programmatic_insights(preprocessed_summary)
+
      st.write(insights)
 else:
  st.info("Please upload a CSV file to get started.")
