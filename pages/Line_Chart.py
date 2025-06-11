@@ -88,7 +88,7 @@ if uploaded_file is not None:
  if st.button("Generate Line Chart"):
      # Apply date grouping if applicable
      if group_by_date == "Month":
-         df["Month"] = df[x_column].dt.month_name
+         df["Month"] = df[x_column].dt.month_name()
          x_column = "Month"
      elif group_by_date == "Year":
          df["Year"] = df[x_column].dt.year
