@@ -3,6 +3,13 @@ import pandas as pd
 import plotly.express as px
 from transformers import pipeline
 
+# Load Hugging Face instruction-following model
+@st.cache_resource  # Cache the model to avoid reloading it every time
+def load_model():
+ return pipeline("text2text-generation", model="google/flan-t5-base")  # Using FLAN-T5 for instruction following
+
+model = load_model()
+
 # Function to preprocess chart data into key statistics
 def preprocess_chart_data(chart_data):
  """
