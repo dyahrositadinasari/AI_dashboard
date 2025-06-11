@@ -24,26 +24,39 @@ def preprocess_chart_data(chart_data):
  summary["average_value"] = chart_data.iloc[:, 1].mean()
  return summary
 
-# Function to get AI-generated insights
 def get_insights_from_ai(preprocessed_summary):
- """
- Generate insights using Hugging Face Transformers.
- """
- try:
-     # Prepare the input text for the model
-     prompt = f"""
-     Analyze the following bar chart summary and provide key insights:
-     - Highest category: {preprocessed_summary['highest_category']} ({preprocessed_summary['highest_value']})
-     - Lowest category: {preprocessed_summary['lowest_category']} ({preprocessed_summary['lowest_value']})
-     - Total sum: {preprocessed_summary['total_sum']}
-     - Average value: {preprocessed_summary['average_value']}
-     """
+"""
+Generate insights using Hugging Face Transformers.
+"""
+try:
+    # Debugging: Print preprocessed summary
+    print("Preprocessed Summary:", preprocessed_summary)
 
-     # Generate insights using the Hugging Face model
-     response = model(prompt, max_length=100, min_length=30, num_return_sequences=1)
-     return response[0]["summary_text"]
- except Exception as e:
-     return f"Error generating insights: {e}"
+    # Prepare the input text for the model
+    prompt = f"""
+    Analyze the following bar chart summary and provide key insights:
+    - Highest category: {preprocessed_summary['highest_category']} ({preprocessed_summary['highest_value']})
+    - Lowest category: {preprocessed_summary['lowest_category']} ({preprocessed_summary['lowest_value']})
+    - Total sum: {preprocessed_summary['total_sum']}
+    - Average value: {preprocessed_summary['average_value']}
+    """
+
+    # Debugging: Print the generated prompt
+    print("Generated Prompt:", prompt)
+
+    # Generate insights using the Hugging Face model
+    response = model(prompt, max_length=100, min_length=30, num_return_sequences=1)
+
+    # Debugging: Print the raw response
+    print("Raw Response:", response)
+
+    # Extract and return the summary text
+    if isinstance(response, list) and "summary_text" in response[0]:
+        return response[0]["summary_text"]
+    else:
+        return "Unexpected response format from the model."
+except Exception as e:
+    return f"Error generating insights: {e}"
 
 # Bar Chart Page
 st.title("Bar Chart Visualization")
