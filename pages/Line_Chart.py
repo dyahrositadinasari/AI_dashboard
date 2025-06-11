@@ -58,7 +58,7 @@ if uploaded_file is not None:
  if pd.api.types.is_datetime64_any_dtype(df[x_column]):
      group_by_date = st.selectbox(
          "Group dates by:",
-         ["None", "Month", "Year", "Year-Month"]
+         ["None", "Date", "Month", "Year", "Year-Month"]
      )
  else:
      group_by_date = "None"
