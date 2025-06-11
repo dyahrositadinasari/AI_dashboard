@@ -16,15 +16,18 @@ def get_insights_from_ai(chart_data):
  Generate insights using Hugging Face Transformers.
  """
  try:
+     # Preprocess the chart data into a summary
+     preprocessed_data = preprocess_chart_data(chart_data)
+
      # Prepare the input text for the model
      prompt = f"""
-     Analyze the following bar chart data and provide insights:
-     {chart_data.to_string(index=False)}
+     Analyze the following bar chart data and provide key insights:
+     {preprocessed_data}
      """
 
      # Generate insights using the Hugging Face model
-     response = model(prompt, max_length=100, num_return_sequences=1)
-     return response[0]["generated_text"]
+     response = model(prompt, max_length=100, min_length=30, num_return_sequences=1)
+     return response[0]["summary_text"]
  except Exception as e:
      return f"Error generating insights: {e}"
 
